@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  body { @apply bg-gray-50 text-gray-900 antialiased; }
+  body { @apply bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased; }
 }
 
 /* Animations */
@@ -106,6 +106,16 @@
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+:is(.dark) .glass {
+  background: rgba(17, 24, 39, 0.85);
+}
+
+/* Dark mode skeleton */
+:is(.dark) .skeleton {
+  background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 /* Safe area for mobile bottom nav */

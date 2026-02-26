@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import ThemeToggle from "./components/ThemeToggle";
 
 const features = [
   { icon: "📝", title: "Xulosa", desc: "Materiallaringizdan AI yordamida qisqacha xulosa oling", color: "from-blue-500 to-indigo-600" },
@@ -58,9 +59,12 @@ export default function Home() {
           <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
             🎓 TayyorlanAI
           </span>
-          <Link href="/app" className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:shadow-lg hover:scale-105 transition-all">
-            Boshlash →
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link href="/app" className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:shadow-lg hover:scale-105 transition-all">
+              Boshlash →
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -184,7 +188,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Telegram CTA */}
+      <section className="py-16 px-5 bg-gradient-to-br from-sky-50 to-blue-50">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="text-5xl mb-4">🤖</div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Telegram botimiz ham bor!
+          </h2>
+          <p className="text-gray-500 mb-8 text-lg max-w-xl mx-auto">
+            Telegramda ham foydalaning — material yuboring, xulosa, flashcard va testlarni to&apos;g&apos;ridan-to&apos;g&apos;ri chatda oling!
+          </p>
+          <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-[#0088cc] text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Telegram Bot →
+          </a>
+        </div>
+      </section>
+
+      {/* Main CTA */}
       <section className="py-20 px-5 bg-white">
         <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-10 md:p-16 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.15),transparent_50%)]" />
@@ -203,17 +225,46 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 to-indigo-900 py-12 px-5 text-white">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <span className="text-lg font-bold">🎓 TayyorlanAI</span>
-            <p className="text-sm text-gray-400 mt-1">O&apos;zbek talabalari uchun AI o&apos;quv platformasi</p>
+      <footer className="bg-gradient-to-br from-gray-900 via-indigo-950 to-gray-900 pt-16 pb-8 px-5 text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            {/* Brand */}
+            <div className="md:col-span-2">
+              <span className="text-2xl font-bold">🎓 TayyorlanAI</span>
+              <p className="text-gray-400 mt-3 text-sm leading-relaxed max-w-sm">
+                O&apos;zbek talabalari uchun maxsus yaratilgan AI o&apos;quv platformasi. Imtihonlarga tayyorlaning, bilimingizni tekshiring va yangi narsalarni o&apos;rganing.
+              </p>
+            </div>
+
+            {/* Platforma */}
+            <div>
+              <h4 className="font-semibold text-sm uppercase tracking-wider text-gray-300 mb-4">Platforma</h4>
+              <div className="flex flex-col gap-2.5 text-sm text-gray-400">
+                <Link href="/app" className="hover:text-white transition">📤 Material yuklash</Link>
+                <Link href="/app/summary" className="hover:text-white transition">📝 Xulosa</Link>
+                <Link href="/app/flashcards" className="hover:text-white transition">🃏 Flashcardlar</Link>
+                <Link href="/app/quiz" className="hover:text-white transition">📋 Testlar</Link>
+                <Link href="/app/chat" className="hover:text-white transition">💬 AI Chat</Link>
+              </div>
+            </div>
+
+            {/* Kontakt */}
+            <div>
+              <h4 className="font-semibold text-sm uppercase tracking-wider text-gray-300 mb-4">Bog&apos;lanish</h4>
+              <div className="flex flex-col gap-2.5 text-sm text-gray-400">
+                <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">🤖 Telegram Bot</a>
+                <a href="https://t.me/Developer_John" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💬 Telegram</a>
+                <a href="https://www.instagram.com/jahongir_rahmonov" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📸 Instagram</a>
+                <a href="https://linktr.ee/Jahongir_Rahmonov" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">🔗 Barcha havolalar</a>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-6 text-sm text-gray-400">
-            <Link href="/app" className="hover:text-white transition">Platforma</Link>
-            <a href="#features" className="hover:text-white transition">Imkoniyatlar</a>
+
+          {/* Bottom bar */}
+          <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p className="text-sm text-gray-500">© 2026 TayyorlanAI — O&apos;zbekiston 🇺🇿</p>
+            <p className="text-xs text-gray-600">O&apos;zbek talabalari uchun yaratilgan</p>
           </div>
-          <p className="text-sm text-gray-500">© 2026 TayyorlanAI ❤️</p>
         </div>
       </footer>
     </div>
