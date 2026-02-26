@@ -254,8 +254,10 @@ export default function Home() {
               <div className="flex flex-col gap-2.5 text-sm text-gray-400">
                 <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">🤖 Telegram Bot</a>
                 <a href="https://t.me/Developer_John" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💬 Telegram</a>
-                <a href="https://www.instagram.com/jahongir_rahmonov" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📸 Instagram</a>
-                <a href="https://linktr.ee/Jahongir_Rahmonov" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">🔗 Barcha havolalar</a>
+                <a href="https://t.me/rahmonovvlog" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📢 Telegram kanal</a>
+                <a href="https://www.instagram.com/rakhmonovv.001" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📸 Instagram</a>
+                <a href="https://www.linkedin.com/in/jahongir-rahmonov-4384ab3a0" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💼 LinkedIn</a>
+                <a href="https://www.facebook.com/profile.php?id=100094652711729" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📘 Facebook</a>
               </div>
             </div>
           </div>
