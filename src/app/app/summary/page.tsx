@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getActiveMaterial } from "@/lib/store";
 
@@ -7,18 +7,25 @@ export default function SummaryPage() {
   const [material, setMaterial] = useState<any>(null);
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
+  const generated = useRef(false);
 
-  useEffect(() => { setMaterial(getActiveMaterial()); }, []);
+  useEffect(() => {
+    const m = getActiveMaterial();
+    setMaterial(m);
+    if (m && !generated.current) {
+      generated.current = true;
+      generateSummary(m);
+    }
+  }, []);
 
-  async function generate() {
-    if (!material) return;
+  async function generateSummary(mat: any) {
     setLoading(true);
     setSummary("");
     try {
       const res = await fetch("/api/summary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: material.text }),
+        body: JSON.stringify({ text: mat.text }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -43,12 +50,12 @@ export default function SummaryPage() {
       <div className="bg-white rounded-2xl p-5 shadow-sm border">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold flex items-center gap-2">📝 Xulosa yaratish</h2>
+            <h2 className="text-lg font-semibold flex items-center gap-2">📝 Xulosa</h2>
             <p className="text-sm text-gray-400 truncate">📄 {material.title}</p>
           </div>
-          <button onClick={generate} disabled={loading}
+          <button onClick={() => generateSummary(material)} disabled={loading}
             className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:shadow-md transition-all flex-shrink-0">
-            {loading ? "⏳ Kutang..." : "✨ Yaratish"}
+            {loading ? "⏳ Kutang..." : "🔄 Qayta yaratish"}
           </button>
         </div>
       </div>
@@ -62,12 +69,14 @@ export default function SummaryPage() {
       )}
 
       {summary && (
-        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up">
-          <div className="flex items-center gap-2 mb-3 pb-3 border-b">
-            <span className="text-lg">✅</span>
-            <span className="font-semibold text-sm">Xulosa tayyor</span>
+        <div className="bg-white rounded-2xl shadow-sm border overflow-hidden animate-slide-up">
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-5 py-3 flex items-center gap-2">
+            <span className="text-white text-lg">✅</span>
+            <span className="font-semibold text-sm text-white">Xulosa tayyor</span>
           </div>
-          <div className="prose prose-sm max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed">{summary}</div>
+          <div className="p-5">
+            <div className="prose prose-sm max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed">{summary}</div>
+          </div>
         </div>
       )}
     </div>

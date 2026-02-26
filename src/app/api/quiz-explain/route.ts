@@ -1,0 +1,14 @@
+import { NextRequest, NextResponse } from "next/server";
+import { chatCompletion } from "@/lib/groq";
+import { SYSTEM_PROMPT, QUIZ_EXPLAIN_PROMPT } from "@/lib/prompts";
+
+export async function POST(req: NextRequest) {
+  try {
+    const { question, correctAnswer, userAnswer } = await req.json();
+    if (!question) return NextResponse.json({ error: "Savol kerak" }, { status: 400 });
+    const result = await chatCompletion(SYSTEM_PROMPT, QUIZ_EXPLAIN_PROMPT(question, correctAnswer, userAnswer));
+    return NextResponse.json({ explanation: result });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
+}

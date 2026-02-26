@@ -8,9 +8,9 @@ Format:
 - (har bir muhim fikrni alohida yoz)
 Matn: ${text}`;
 
-export const FLASHCARD_PROMPT = (text: string) => `Quyidagi matn asosida 5-10 ta flashcard yarat.
+export const FLASHCARD_PROMPT = (text: string, count: number = 10) => `Quyidagi matn asosida ${count} ta flashcard yarat.
 Har bir flashcard savol va javobdan iborat bo'lsin.
-MUHIM: Faqat JSON formatda javob ber, boshqa hech narsa yozma.
+MUHIM: Faqat JSON formatda javob ber, boshqa hech narsa yozma. Aniq ${count} ta flashcard bo'lishi kerak.
 JSON massiv qaytaring:
 [
   {
@@ -20,9 +20,9 @@ JSON massiv qaytaring:
 ]
 Matn: ${text}`;
 
-export const QUIZ_JSON_PROMPT = (text: string) => `Quyidagi matn asosida 5 ta test savol yarat.
+export const QUIZ_JSON_PROMPT = (text: string, count: number = 5) => `Quyidagi matn asosida ${count} ta test savol yarat.
 Har bir savolda 4 ta variant bo'lsin.
-MUHIM: Faqat JSON formatda javob ber, boshqa hech narsa yozma.
+MUHIM: Faqat JSON formatda javob ber, boshqa hech narsa yozma. Aniq ${count} ta savol bo'lishi kerak.
 JSON massiv qaytaring:
 [
   {
@@ -39,3 +39,11 @@ Talaba senga quyidagi material asosida savol beryapti.
 Har doim o'zbek tilida javob ber. Aniq, tushunarli va foydali javoblar ber.
 Material: ${text}
 Talabaning savoli: ${question}`;
+
+export const QUIZ_EXPLAIN_PROMPT = (question: string, correctAnswer: string, userAnswer: string) => `Talaba test savolida xato javob berdi. O'zbek tilida qisqacha tushuntir nima uchun to'g'ri javob boshqacha.
+
+Savol: ${question}
+Talabaning javobi: ${userAnswer}
+To'g'ri javob: ${correctAnswer}
+
+Qisqacha va tushunarli tarzda tushuntir (3-5 jumla). Nima uchun to'g'ri javob aynan shu ekanligini izohla.`;

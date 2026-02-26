@@ -10,11 +10,17 @@ const tools = [
   { href: "/app/chat", icon: "💬", label: "AI Chat", desc: "Savol-javob", color: "from-orange-500 to-red-500" },
 ];
 
+const uploadTypes = [
+  { key: "text" as const, icon: "📝", title: "Matn yozing", desc: "Materialingizni yozing yoki joylashtiring", color: "from-blue-500 to-indigo-600" },
+  { key: "file" as const, icon: "📄", title: "Fayl yuklang", desc: "PDF yoki TXT faylni tanlang", color: "from-purple-500 to-pink-600" },
+  { key: "image" as const, icon: "🖼", title: "Rasm yuklang", desc: "Rasm — AI matnni tanib oladi (OCR)", color: "from-teal-500 to-cyan-600" },
+];
+
 export default function Dashboard() {
   const router = useRouter();
   const [materials, setMats] = useState<Material[]>([]);
   const [activeId, setActiveId] = useState("");
-  const [tab, setTab] = useState<"text" | "file" | "image">("text");
+  const [activeUpload, setActiveUpload] = useState<"text" | "file" | "image" | null>(null);
   const [textInput, setTextInput] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,6 +42,7 @@ export default function Dashboard() {
     reload();
     setTextInput("");
     setTitle("");
+    setActiveUpload(null);
     setShowSuccess(true);
   }
 
@@ -86,7 +93,7 @@ export default function Dashboard() {
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <div className="relative bg-white rounded-3xl p-6 md:p-8 max-w-md w-full modal-content" onClick={e => e.stopPropagation()}>
             <div className="text-center mb-6">
-              <div className="text-5xl mb-3">✅</div>
+              <div className="text-5xl mb-3 animate-scale-in">✅</div>
               <h3 className="text-xl font-bold mb-1">Material yuklandi!</h3>
               <p className="text-gray-500 text-sm">Endi nima qilmoqchisiz?</p>
             </div>
@@ -108,20 +115,56 @@ export default function Dashboard() {
       )}
 
       <div className="space-y-5">
-        {/* Upload section */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up">
-          <h2 className="text-lg font-semibold mb-4">📤 Material yuklash</h2>
-          <div className="flex gap-2 mb-4">
-            {(["text", "file", "image"] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === t ? "bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-                {t === "text" ? "📝 Matn" : t === "file" ? "📄 Fayl" : "🖼 Rasm"}
-              </button>
-            ))}
+        {/* Quick tools (when material is active) - show prominently at top */}
+        {activeMaterial && (
+          <div className="animate-slide-up">
+            <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-5 border border-primary-100">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">⚡</span>
+                <h3 className="font-semibold text-sm">Tezkor vositalar</h3>
+                <span className="text-xs text-gray-400 ml-auto truncate max-w-[150px]">📄 {activeMaterial.title}</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {tools.map((t) => (
+                  <button key={t.href} onClick={() => router.push(t.href)}
+                    className={`bg-gradient-to-br ${t.color} text-white rounded-2xl p-4 text-center hover:shadow-lg hover:scale-105 transition-all`}>
+                    <div className="text-2xl mb-1">{t.icon}</div>
+                    <div className="font-medium text-sm">{t.label}</div>
+                    <div className="text-xs text-white/60 mt-0.5 hidden sm:block">{t.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
+        )}
 
-          {tab === "text" && (
+        {/* Upload section - cards */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up delay-100">
+          <h2 className="text-lg font-semibold mb-1">📤 Material yuklash</h2>
+          <p className="text-sm text-gray-400 mb-4">Quyidagilardan birini tanlang</p>
+
+          {!activeUpload ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {uploadTypes.map((u) => (
+                <button key={u.key} onClick={() => {
+                  setActiveUpload(u.key);
+                  if (u.key === "file") setTimeout(() => fileRef.current?.click(), 100);
+                  if (u.key === "image") setTimeout(() => imgRef.current?.click(), 100);
+                }}
+                  className={`group text-left p-5 rounded-2xl border-2 border-dashed border-gray-200 hover:border-transparent hover:shadow-lg transition-all relative overflow-hidden`}>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${u.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                  <div className="text-3xl mb-2">{u.icon}</div>
+                  <h3 className="font-semibold text-sm mb-1">{u.title}</h3>
+                  <p className="text-xs text-gray-400">{u.desc}</p>
+                </button>
+              ))}
+            </div>
+          ) : activeUpload === "text" ? (
             <div className="space-y-3 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">📝 Matn kiritish</span>
+                <button onClick={() => setActiveUpload(null)} className="text-xs text-gray-400 hover:text-gray-600 transition">← Ortga</button>
+              </div>
               <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sarlavha (ixtiyoriy)"
                 className="w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
               <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} rows={5} placeholder="Materialingizni shu yerga yozing yoki joylashtiring..."
@@ -135,27 +178,27 @@ export default function Dashboard() {
                 </button>
               </div>
             </div>
-          )}
-
-          {tab === "file" && (
+          ) : (
             <div className="space-y-3 animate-fade-in">
-              <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-primary-300 transition">
-                <div className="text-4xl mb-2">📄</div>
-                <p className="text-sm text-gray-500 mb-3">PDF yoki TXT faylni tanlang</p>
-                <input ref={fileRef} type="file" accept=".pdf,.txt" onChange={handleFile}
-                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary-50 file:text-primary-700 file:font-medium hover:file:bg-primary-100" />
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">{activeUpload === "file" ? "📄 Fayl yuklash" : "🖼 Rasm yuklash"}</span>
+                <button onClick={() => setActiveUpload(null)} className="text-xs text-gray-400 hover:text-gray-600 transition">← Ortga</button>
               </div>
-            </div>
-          )}
-
-          {tab === "image" && (
-            <div className="space-y-3 animate-fade-in">
-              <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-accent-300 transition">
-                <div className="text-4xl mb-2">🖼</div>
-                <p className="text-sm text-gray-500 mb-3">Rasm yuklang — AI matnni tanib oladi (OCR)</p>
-                <input ref={imgRef} type="file" accept="image/*" onChange={handleImage}
-                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-accent-50 file:text-accent-700 file:font-medium hover:file:bg-accent-100" />
-              </div>
+              {activeUpload === "file" ? (
+                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-primary-300 transition">
+                  <div className="text-4xl mb-2">📄</div>
+                  <p className="text-sm text-gray-500 mb-3">PDF yoki TXT faylni tanlang</p>
+                  <input ref={fileRef} type="file" accept=".pdf,.txt" onChange={handleFile}
+                    className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary-50 file:text-primary-700 file:font-medium hover:file:bg-primary-100" />
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-accent-300 transition">
+                  <div className="text-4xl mb-2">🖼</div>
+                  <p className="text-sm text-gray-500 mb-3">Rasm yuklang — AI matnni tanib oladi (OCR)</p>
+                  <input ref={imgRef} type="file" accept="image/*" onChange={handleImage}
+                    className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-accent-50 file:text-accent-700 file:font-medium hover:file:bg-accent-100" />
+                </div>
+              )}
             </div>
           )}
 
@@ -165,23 +208,10 @@ export default function Dashboard() {
               Yuklanmoqda...
             </div>
           )}
+          {/* Hidden inputs for when cards trigger file selection */}
+          <input ref={fileRef} type="file" accept=".pdf,.txt" onChange={handleFile} className="hidden" />
+          <input ref={imgRef} type="file" accept="image/*" onChange={handleImage} className="hidden" />
         </div>
-
-        {/* Quick tools (when material is active) */}
-        {activeMaterial && (
-          <div className="animate-slide-up delay-100">
-            <h3 className="text-sm font-semibold text-gray-400 mb-3 px-1">⚡ Tezkor vositalar</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {tools.map((t) => (
-                <button key={t.href} onClick={() => router.push(t.href)}
-                  className={`bg-gradient-to-br ${t.color} text-white rounded-2xl p-4 text-center hover:shadow-lg hover:scale-105 transition-all`}>
-                  <div className="text-2xl mb-1">{t.icon}</div>
-                  <div className="font-medium text-sm">{t.label}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Materials list */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up delay-200">

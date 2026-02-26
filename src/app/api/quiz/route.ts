@@ -4,9 +4,10 @@ import { SYSTEM_PROMPT, QUIZ_JSON_PROMPT } from "@/lib/prompts";
 
 export async function POST(req: NextRequest) {
   try {
-    const { text } = await req.json();
+    const { text, count } = await req.json();
     if (!text) return NextResponse.json({ error: "Matn kerak" }, { status: 400 });
-    const result = await chatCompletion(SYSTEM_PROMPT, QUIZ_JSON_PROMPT(text.slice(0, 10000)));
+    const numQuestions = count || 5;
+    const result = await chatCompletion(SYSTEM_PROMPT, QUIZ_JSON_PROMPT(text.slice(0, 10000), numQuestions));
     const match = result.match(/\[[\s\S]*\]/);
     if (!match) return NextResponse.json({ error: "JSON parse xatosi" }, { status: 500 });
     const quiz = JSON.parse(match[0]);
