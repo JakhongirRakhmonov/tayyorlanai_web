@@ -1,38 +1,88 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getActiveMaterial } from "@/lib/store";
 
 const nav = [
-  { href: "/app", label: "📂 Material", exact: true },
-  { href: "/app/summary", label: "📝 Xulosa" },
-  { href: "/app/flashcards", label: "🃏 Kartalar" },
-  { href: "/app/quiz", label: "📋 Test" },
-  { href: "/app/chat", label: "💬 Chat" },
+  { href: "/app", label: "📂", title: "Material", exact: true },
+  { href: "/app/summary", label: "📝", title: "Xulosa" },
+  { href: "/app/flashcards", label: "🃏", title: "Kartalar" },
+  { href: "/app/quiz", label: "📋", title: "Test" },
+  { href: "/app/chat", label: "💬", title: "Chat" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
+  const [materialName, setMaterialName] = useState("");
+
+  useEffect(() => {
+    const m = getActiveMaterial();
+    setMaterialName(m?.title || "");
+  }, [path]);
+
+  const isSubPage = path !== "/app";
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+      {/* Top header */}
+      <header className="glass border-b sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
+          {isSubPage && (
+            <Link href="/app" className="text-gray-400 hover:text-gray-600 transition text-lg">
+              ←
+            </Link>
+          )}
           <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
             🎓 TayyorlanAI
           </Link>
+          <div className="flex-1" />
+          {materialName && (
+            <div className="hidden sm:block text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full truncate max-w-[200px]">
+              📄 {materialName}
+            </div>
+          )}
         </div>
-        <div className="max-w-4xl mx-auto px-2 pb-2 flex gap-1 overflow-x-auto scrollbar-none">
+        {/* Desktop nav */}
+        <div className="hidden md:flex max-w-4xl mx-auto px-2 pb-2 gap-1">
           {nav.map((n) => {
             const active = n.exact ? path === n.href : path.startsWith(n.href);
             return (
               <Link key={n.href} href={n.href}
-                className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition ${active ? "bg-primary-600 text-white" : "text-gray-600 hover:bg-gray-100"}`}>
-                {n.label}
+                className={`px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition font-medium ${active ? "bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-sm" : "text-gray-500 hover:bg-gray-100"}`}>
+                {n.label} {n.title}
               </Link>
             );
           })}
         </div>
       </header>
-      <main className="max-w-4xl mx-auto px-4 py-6">{children}</main>
+
+      {/* Mobile material indicator */}
+      {materialName && (
+        <div className="md:hidden px-4 pt-3">
+          <div className="text-xs text-gray-400 bg-white px-3 py-2 rounded-xl border truncate">
+            📄 Tanlangan: <span className="font-medium text-gray-600">{materialName}</span>
+          </div>
+        </div>
+      )}
+
+      <main className="max-w-4xl mx-auto px-4 py-4 animate-fade-in">{children}</main>
+
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 glass border-t z-50 safe-area-bottom">
+        <div className="flex justify-around py-2 px-2">
+          {nav.map((n) => {
+            const active = n.exact ? path === n.href : path.startsWith(n.href);
+            return (
+              <Link key={n.href} href={n.href}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition ${active ? "text-primary-600" : "text-gray-400"}`}>
+                <span className={`text-xl ${active ? "scale-110" : ""} transition-transform`}>{n.label}</span>
+                <span className="text-[10px] font-medium">{n.title}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }

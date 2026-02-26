@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { getActiveMaterial } from "@/lib/store";
 
 export default function SummaryPage() {
@@ -27,37 +28,46 @@ export default function SummaryPage() {
   }
 
   if (!material) return (
-    <div className="bg-white rounded-2xl p-8 text-center shadow-sm border">
-      <p className="text-4xl mb-3">📝</p>
-      <p className="text-gray-500">Avval material yuklang va tanlang</p>
+    <div className="bg-white rounded-2xl p-10 text-center shadow-sm border animate-scale-in">
+      <div className="text-5xl mb-4 animate-float">📝</div>
+      <p className="text-gray-500 font-medium mb-2">Material tanlanmagan</p>
+      <p className="text-gray-400 text-sm mb-4">Avval material yuklang va tanlang</p>
+      <Link href="/app" className="inline-block bg-primary-600 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-primary-700 transition">
+        ← Materiallarga qaytish
+      </Link>
     </div>
   );
 
   return (
-    <div className="space-y-4">
-      <div className="bg-white rounded-2xl p-6 shadow-sm border">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-lg font-semibold">📝 Xulosa yaratish</h2>
-            <p className="text-sm text-gray-400">Material: {material.title}</p>
+    <div className="space-y-4 animate-fade-in">
+      <div className="bg-white rounded-2xl p-5 shadow-sm border">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold flex items-center gap-2">📝 Xulosa yaratish</h2>
+            <p className="text-sm text-gray-400 truncate">📄 {material.title}</p>
           </div>
           <button onClick={generate} disabled={loading}
-            className="bg-primary-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:bg-primary-700 transition">
-            {loading ? "⏳ Yaratilmoqda..." : "✨ Yaratish"}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:shadow-md transition-all flex-shrink-0">
+            {loading ? "⏳ Kutang..." : "✨ Yaratish"}
           </button>
         </div>
       </div>
 
       {loading && (
-        <div className="bg-white rounded-2xl p-8 shadow-sm border text-center">
-          <div className="w-8 h-8 border-3 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-gray-500">AI xulosa tayyorlamoqda...</p>
+        <div className="bg-white rounded-2xl p-10 shadow-sm border text-center animate-scale-in">
+          <div className="w-10 h-10 border-3 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500 font-medium">AI xulosa tayyorlamoqda...</p>
+          <p className="text-gray-400 text-xs mt-1">Bu bir necha soniya davom etishi mumkin</p>
         </div>
       )}
 
       {summary && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border">
-          <div className="prose prose-sm max-w-none whitespace-pre-wrap">{summary}</div>
+        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up">
+          <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+            <span className="text-lg">✅</span>
+            <span className="font-semibold text-sm">Xulosa tayyor</span>
+          </div>
+          <div className="prose prose-sm max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed">{summary}</div>
         </div>
       )}
     </div>

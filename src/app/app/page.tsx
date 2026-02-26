@@ -1,14 +1,24 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { getMaterials, saveMaterial, deleteMaterial, getActiveMaterialId, setActiveMaterialId, Material } from "@/lib/store";
 
+const tools = [
+  { href: "/app/summary", icon: "📝", label: "Xulosa", desc: "AI xulosa yaratish", color: "from-blue-500 to-indigo-600" },
+  { href: "/app/flashcards", icon: "🃏", label: "Flashcardlar", desc: "Kartochkalar bilan o'rganish", color: "from-purple-500 to-pink-600" },
+  { href: "/app/quiz", icon: "📋", label: "Test", desc: "Bilimni tekshirish", color: "from-green-500 to-emerald-600" },
+  { href: "/app/chat", icon: "💬", label: "AI Chat", desc: "Savol-javob", color: "from-orange-500 to-red-500" },
+];
+
 export default function Dashboard() {
+  const router = useRouter();
   const [materials, setMats] = useState<Material[]>([]);
   const [activeId, setActiveId] = useState("");
   const [tab, setTab] = useState<"text" | "file" | "image">("text");
   const [textInput, setTextInput] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLInputElement>(null);
 
@@ -22,9 +32,11 @@ export default function Dashboard() {
   function addMaterial(title: string, text: string) {
     const m: Material = { id: Date.now().toString(), title: title || "Material", text, createdAt: Date.now() };
     saveMaterial(m);
+    setActiveMaterialId(m.id);
     reload();
     setTextInput("");
     setTitle("");
+    setShowSuccess(true);
   }
 
   async function handleFile() {
@@ -64,82 +76,146 @@ export default function Dashboard() {
     } catch (e: any) { alert("Xatolik: " + e.message); setLoading(false); }
   }
 
+  const activeMaterial = materials.find(m => m.id === activeId);
+
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl p-6 shadow-sm border">
-        <h2 className="text-lg font-semibold mb-4">📤 Material yuklash</h2>
-        <div className="flex gap-2 mb-4">
-          {(["text", "file", "image"] as const).map((t) => (
-            <button key={t} onClick={() => setTab(t)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition ${tab === t ? "bg-primary-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-              {t === "text" ? "📝 Matn" : t === "file" ? "📄 Fayl" : "🖼 Rasm"}
+    <>
+      {/* Success Modal */}
+      {showSuccess && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay" onClick={() => setShowSuccess(false)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div className="relative bg-white rounded-3xl p-6 md:p-8 max-w-md w-full modal-content" onClick={e => e.stopPropagation()}>
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-3">✅</div>
+              <h3 className="text-xl font-bold mb-1">Material yuklandi!</h3>
+              <p className="text-gray-500 text-sm">Endi nima qilmoqchisiz?</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {tools.map((t) => (
+                <button key={t.href} onClick={() => { setShowSuccess(false); router.push(t.href); }}
+                  className={`bg-gradient-to-br ${t.color} text-white rounded-2xl p-4 text-center hover:shadow-lg hover:scale-105 transition-all`}>
+                  <div className="text-3xl mb-2">{t.icon}</div>
+                  <div className="font-semibold text-sm">{t.label}</div>
+                  <div className="text-xs text-white/70 mt-0.5">{t.desc}</div>
+                </button>
+              ))}
+            </div>
+            <button onClick={() => setShowSuccess(false)} className="w-full mt-4 text-sm text-gray-400 hover:text-gray-600 transition py-2">
+              Yopish
             </button>
-          ))}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-5">
+        {/* Upload section */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up">
+          <h2 className="text-lg font-semibold mb-4">📤 Material yuklash</h2>
+          <div className="flex gap-2 mb-4">
+            {(["text", "file", "image"] as const).map((t) => (
+              <button key={t} onClick={() => setTab(t)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${tab === t ? "bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                {t === "text" ? "📝 Matn" : t === "file" ? "📄 Fayl" : "🖼 Rasm"}
+              </button>
+            ))}
+          </div>
+
+          {tab === "text" && (
+            <div className="space-y-3 animate-fade-in">
+              <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sarlavha (ixtiyoriy)"
+                className="w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
+              <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} rows={5} placeholder="Materialingizni shu yerga yozing yoki joylashtiring..."
+                className="w-full px-4 py-3 border rounded-xl text-sm resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-400">{textInput.length}/10000</span>
+                <button onClick={() => textInput && addMaterial(title, textInput.slice(0, 10000))}
+                  disabled={!textInput}
+                  className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:shadow-md transition-all">
+                  Saqlash ✓
+                </button>
+              </div>
+            </div>
+          )}
+
+          {tab === "file" && (
+            <div className="space-y-3 animate-fade-in">
+              <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-primary-300 transition">
+                <div className="text-4xl mb-2">📄</div>
+                <p className="text-sm text-gray-500 mb-3">PDF yoki TXT faylni tanlang</p>
+                <input ref={fileRef} type="file" accept=".pdf,.txt" onChange={handleFile}
+                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary-50 file:text-primary-700 file:font-medium hover:file:bg-primary-100" />
+              </div>
+            </div>
+          )}
+
+          {tab === "image" && (
+            <div className="space-y-3 animate-fade-in">
+              <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-accent-300 transition">
+                <div className="text-4xl mb-2">🖼</div>
+                <p className="text-sm text-gray-500 mb-3">Rasm yuklang — AI matnni tanib oladi (OCR)</p>
+                <input ref={imgRef} type="file" accept="image/*" onChange={handleImage}
+                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-accent-50 file:text-accent-700 file:font-medium hover:file:bg-accent-100" />
+              </div>
+            </div>
+          )}
+
+          {loading && (
+            <div className="mt-4 flex items-center justify-center gap-2 text-sm text-primary-600 bg-primary-50 rounded-xl p-4">
+              <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
+              Yuklanmoqda...
+            </div>
+          )}
         </div>
 
-        {tab === "text" && (
-          <div className="space-y-3">
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sarlavha (ixtiyoriy)"
-              className="w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none" />
-            <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} rows={6} placeholder="Materialingizni shu yerga yozing yoki joylashtiring..."
-              className="w-full px-4 py-3 border rounded-xl text-sm resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none" />
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-gray-400">{textInput.length}/10000</span>
-              <button onClick={() => textInput && addMaterial(title, textInput.slice(0, 10000))}
-                disabled={!textInput}
-                className="bg-primary-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:bg-primary-700 transition">
-                Saqlash
-              </button>
+        {/* Quick tools (when material is active) */}
+        {activeMaterial && (
+          <div className="animate-slide-up delay-100">
+            <h3 className="text-sm font-semibold text-gray-400 mb-3 px-1">⚡ Tezkor vositalar</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {tools.map((t) => (
+                <button key={t.href} onClick={() => router.push(t.href)}
+                  className={`bg-gradient-to-br ${t.color} text-white rounded-2xl p-4 text-center hover:shadow-lg hover:scale-105 transition-all`}>
+                  <div className="text-2xl mb-1">{t.icon}</div>
+                  <div className="font-medium text-sm">{t.label}</div>
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {tab === "file" && (
-          <div className="space-y-3">
-            <input ref={fileRef} type="file" accept=".pdf,.txt" onChange={handleFile}
-              className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary-50 file:text-primary-700 file:font-medium hover:file:bg-primary-100" />
-            <p className="text-xs text-gray-400">PDF yoki TXT fayllarni yuklang</p>
-          </div>
-        )}
-
-        {tab === "image" && (
-          <div className="space-y-3">
-            <input ref={imgRef} type="file" accept="image/*" onChange={handleImage}
-              className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-accent-50 file:text-accent-700 file:font-medium hover:file:bg-accent-100" />
-            <p className="text-xs text-gray-400">Rasm yuklang — AI matnni avtomatik tanib oladi (OCR)</p>
-          </div>
-        )}
-
-        {loading && (
-          <div className="mt-4 flex items-center gap-2 text-sm text-primary-600">
-            <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
-            Yuklanmoqda...
-          </div>
-        )}
-      </div>
-
-      <div className="bg-white rounded-2xl p-6 shadow-sm border">
-        <h2 className="text-lg font-semibold mb-4">📚 Materiallar ({materials.length})</h2>
-        {materials.length === 0 ? (
-          <p className="text-gray-400 text-sm">Hali material yo'q. Yuqoridan material yuklang.</p>
-        ) : (
-          <div className="space-y-2">
-            {materials.map((m) => (
-              <div key={m.id}
-                className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition ${m.id === activeId ? "bg-primary-50 border-2 border-primary-300" : "bg-gray-50 hover:bg-gray-100 border-2 border-transparent"}`}
-                onClick={() => { setActiveMaterialId(m.id); setActiveId(m.id); }}>
-                <div className="min-w-0 flex-1">
-                  <div className="font-medium text-sm truncate">{m.title}</div>
-                  <div className="text-xs text-gray-400 truncate">{m.text.slice(0, 80)}...</div>
-                  <div className="text-xs text-gray-300 mt-1">{new Date(m.createdAt).toLocaleDateString("uz")}</div>
+        {/* Materials list */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up delay-200">
+          <h2 className="text-lg font-semibold mb-4">📚 Materiallar <span className="text-sm font-normal text-gray-400">({materials.length})</span></h2>
+          {materials.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-3 animate-float">📂</div>
+              <p className="text-gray-400 text-sm">Hali material yo&apos;q</p>
+              <p className="text-gray-300 text-xs mt-1">Yuqoridan material yuklang</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {materials.map((m) => (
+                <div key={m.id}
+                  className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${m.id === activeId ? "bg-gradient-to-r from-primary-50 to-accent-50 border-2 border-primary-200 shadow-sm" : "bg-gray-50 hover:bg-gray-100 border-2 border-transparent"}`}
+                  onClick={() => { setActiveMaterialId(m.id); setActiveId(m.id); }}>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${m.id === activeId ? "bg-primary-100" : "bg-gray-100"}`}>
+                    📄
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-sm truncate">{m.title}</div>
+                    <div className="text-xs text-gray-400 truncate">{m.text.slice(0, 60)}...</div>
+                  </div>
+                  {m.id === activeId && (
+                    <span className="text-[10px] font-bold text-primary-600 bg-primary-100 px-2 py-0.5 rounded-full flex-shrink-0">FAOL</span>
+                  )}
+                  <button onClick={(e) => { e.stopPropagation(); deleteMaterial(m.id); reload(); }}
+                    className="ml-1 text-gray-300 hover:text-red-500 transition text-lg flex-shrink-0">✕</button>
                 </div>
-                <button onClick={(e) => { e.stopPropagation(); deleteMaterial(m.id); reload(); }}
-                  className="ml-2 text-red-400 hover:text-red-600 text-lg">✕</button>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
