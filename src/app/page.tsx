@@ -213,18 +213,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Simple CTA */}
+      {/* CTA */}
       <section className="py-20 px-5 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-            Tayyor bo&apos;ling — bepul! 🎓
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-8 text-lg">
-            Ro&apos;yxatdan o&apos;tish shart emas. Material yuklang va AI ishlaydi.
-          </p>
-          <Link href="/app" className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:shadow-xl hover:scale-105 transition-all">
-            Boshlash →
-          </Link>
+        <div className="max-w-4xl mx-auto">
+          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-10 md:p-14 overflow-hidden text-center">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.15),transparent_50%)]" />
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-yellow-400/20 rounded-full blur-3xl" />
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-400/20 rounded-full blur-3xl" />
+            <div className="relative">
+              <div className="text-5xl mb-4">🚀</div>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                O&apos;qishni boshlang
+              </h2>
+              <p className="text-white/70 mb-8 text-lg max-w-lg mx-auto">
+                Materialni yuklang, AI xulosa, flashcard va test yaratsin. Bepul. Tez. O&apos;zbekcha.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/app" className="inline-block bg-white text-indigo-700 px-10 py-4 rounded-2xl text-lg font-bold hover:shadow-2xl hover:scale-105 transition-all">
+                  Platformaga kirish →
+                </Link>
+                <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all">
+                  🤖 Telegram Bot
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
