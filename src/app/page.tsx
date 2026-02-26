@@ -213,59 +213,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Main CTA */}
-      <section className="relative py-24 md:py-32 px-5 bg-white dark:bg-gray-950 overflow-hidden">
-        {/* Animated background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0di00aDR2NGgtNHptMC0zMFYwaDR2NGgtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
-        <div className="absolute top-10 left-[10%] w-20 h-20 bg-yellow-400/20 rounded-full blur-xl animate-float" />
-        <div className="absolute bottom-10 right-[15%] w-28 h-28 bg-cyan-400/20 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-[5%] w-16 h-16 bg-pink-400/20 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-20 right-[10%] w-12 h-12 bg-white/10 rounded-full blur-lg animate-float" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.1),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,0,0.06),transparent_40%)]" />
-
-        <div className="relative max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white/90 rounded-full px-5 py-2 text-sm font-medium mb-8 border border-white/20">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            1 daqiqada boshlang — ro&apos;yxatdan o&apos;tish shart emas
-          </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Imtihonga tayyormisiz?
-            <br />
-            <span className="bg-gradient-to-r from-yellow-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">AI yordam beradi!</span>
+      {/* Simple CTA */}
+      <section className="py-20 px-5 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            Tayyor bo&apos;ling — bepul! 🎓
           </h2>
-          <p className="text-white/70 mb-10 text-lg md:text-xl max-w-2xl mx-auto">
-            Material yuklang — xulosa, flashcardlar, testlar va AI chat bir zumda tayyor bo&apos;ladi.
+          <p className="text-gray-500 dark:text-gray-400 mb-8 text-lg">
+            Ro&apos;yxatdan o&apos;tish shart emas. Material yuklang va AI ishlaydi.
           </p>
-
-          {/* Steps row */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-10">
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/15">
-              <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">1</span>
-              <span className="text-white/90 text-sm font-medium">Material yuklang</span>
-            </div>
-            <span className="hidden sm:block text-white/30 text-xl">→</span>
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/15">
-              <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">2</span>
-              <span className="text-white/90 text-sm font-medium">AI tahlil qiladi</span>
-            </div>
-            <span className="hidden sm:block text-white/30 text-xl">→</span>
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/15">
-              <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">3</span>
-              <span className="text-white/90 text-sm font-medium">O&apos;rganing! 🎉</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/app" className="inline-flex items-center justify-center gap-2 bg-white text-primary-700 px-10 py-4 rounded-2xl text-lg font-bold hover:shadow-2xl hover:scale-105 transition-all group">
-              Bepul boshlash
-              <span className="group-hover:translate-x-1 transition-transform">🚀</span>
-            </Link>
-            <a href="#features" className="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all">
-              Ko&apos;proq bilish ↓
-            </a>
-          </div>
+          <Link href="/app" className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:shadow-xl hover:scale-105 transition-all">
+            Boshlash →
+          </Link>
         </div>
       </section>
 
