@@ -34,11 +34,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/20">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass dark:border-gray-800 border-b border-white/20">
         <div className="flex items-center justify-between px-5 py-3 max-w-6xl mx-auto">
           <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
             🎓 TayyorlanAI
           </span>
+          <div className="hidden md:flex items-center gap-6">
+            <a href="#features" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Imkoniyatlar</a>
+            <a href="#how" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Qanday ishlaydi</a>
+            <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Telegram Bot</a>
+          </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <Link href="/app" className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:shadow-lg hover:scale-105 transition-all">
@@ -105,7 +110,7 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((f, i) => (
-              <div key={f.title} className={`animate-stagger-${Math.min(i + 1, 6)} group bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}>
+              <div key={f.title} className={`animate-stagger-${Math.min(i + 1, 6)} group bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl dark:hover:border-primary-500/50 dark:hover:shadow-primary-500/10 hover:-translate-y-1 transition-all duration-300`}>
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform`}>
                   {f.icon}
                 </div>
@@ -118,7 +123,7 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="py-16 px-5 bg-white dark:bg-gray-950">
+      <section id="how" className="py-16 px-5 bg-white dark:bg-gray-950">
         <div className="max-w-4xl mx-auto">
           <h2 className="animate-stagger-1 text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
             Qanday ishlaydi? 🛠
