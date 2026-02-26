@@ -16,8 +16,10 @@ export default function ThemeToggle() {
   }
 
   return (
-    <button onClick={toggle} className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-lg" title={dark ? "Yorug' rejim" : "Qorong'u rejim"}>
-      {dark ? "☀️" : "🌙"}
+    <button onClick={toggle}
+      className="flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+      title={dark ? "Yorug' rejim" : "Qorong'u rejim"}>
+      {dark ? "☀️ Yorug'" : "🌙 Qorong'u"}
     </button>
   );
 }

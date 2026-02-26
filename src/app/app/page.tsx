@@ -91,11 +91,11 @@ export default function Dashboard() {
       {showSuccess && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay" onClick={() => setShowSuccess(false)}>
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-          <div className="relative bg-white rounded-3xl p-6 md:p-8 max-w-md w-full modal-content" onClick={e => e.stopPropagation()}>
+          <div className="relative bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 max-w-md w-full modal-content" onClick={e => e.stopPropagation()}>
             <div className="text-center mb-6">
               <div className="text-5xl mb-3 animate-scale-in">✅</div>
               <h3 className="text-xl font-bold mb-1">Material yuklandi!</h3>
-              <p className="text-gray-500 text-sm">Endi nima qilmoqchisiz?</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Endi nima qilmoqchisiz?</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {tools.map((t) => (
@@ -118,11 +118,11 @@ export default function Dashboard() {
         {/* Quick tools (when material is active) - show prominently at top */}
         {activeMaterial && (
           <div className="animate-slide-up">
-            <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-5 border border-primary-100">
+            <div className="bg-gradient-to-br from-primary-50 to-accent-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-5 border border-primary-100 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">⚡</span>
                 <h3 className="font-semibold text-sm">Tezkor vositalar</h3>
-                <span className="text-xs text-gray-400 ml-auto truncate max-w-[150px]">📄 {activeMaterial.title}</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto truncate max-w-[150px]">📄 {activeMaterial.title}</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {tools.map((t) => (
@@ -139,9 +139,9 @@ export default function Dashboard() {
         )}
 
         {/* Upload section - cards */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up delay-100">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm border dark:border-gray-800 animate-slide-up delay-100">
           <h2 className="text-lg font-semibold mb-1">📤 Material yuklash</h2>
-          <p className="text-sm text-gray-400 mb-4">Quyidagilardan birini tanlang</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">Quyidagilardan birini tanlang</p>
 
           {!activeUpload ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -151,24 +151,24 @@ export default function Dashboard() {
                   if (u.key === "file") setTimeout(() => fileRef.current?.click(), 100);
                   if (u.key === "image") setTimeout(() => imgRef.current?.click(), 100);
                 }}
-                  className={`group text-left p-5 rounded-2xl border-2 border-dashed border-gray-200 hover:border-transparent hover:shadow-lg transition-all relative overflow-hidden`}>
+                  className={`group text-left p-5 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-transparent hover:shadow-lg transition-all relative overflow-hidden`}>
                   <div className={`absolute inset-0 bg-gradient-to-br ${u.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
                   <div className="text-3xl mb-2">{u.icon}</div>
-                  <h3 className="font-semibold text-sm mb-1">{u.title}</h3>
-                  <p className="text-xs text-gray-400">{u.desc}</p>
+                  <h3 className="font-semibold text-sm mb-1 dark:text-white">{u.title}</h3>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">{u.desc}</p>
                 </button>
               ))}
             </div>
           ) : activeUpload === "text" ? (
             <div className="space-y-3 animate-fade-in">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-600">📝 Matn kiritish</span>
-                <button onClick={() => setActiveUpload(null)} className="text-xs text-gray-400 hover:text-gray-600 transition">← Ortga</button>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">📝 Matn kiritish</span>
+                <button onClick={() => setActiveUpload(null)} className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">← Ortga</button>
               </div>
               <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sarlavha (ixtiyoriy)"
-                className="w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
+                className="w-full px-4 py-2.5 border dark:border-gray-700 rounded-xl text-sm dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
               <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} rows={5} placeholder="Materialingizni shu yerga yozing yoki joylashtiring..."
-                className="w-full px-4 py-3 border rounded-xl text-sm resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
+                className="w-full px-4 py-3 border dark:border-gray-700 rounded-xl text-sm dark:bg-gray-800 dark:text-white resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" />
               <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-400">{textInput.length}/10000</span>
                 <button onClick={() => textInput && addMaterial(title, textInput.slice(0, 10000))}
@@ -181,8 +181,8 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-3 animate-fade-in">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-600">{activeUpload === "file" ? "📄 Fayl yuklash" : "🖼 Rasm yuklash"}</span>
-                <button onClick={() => setActiveUpload(null)} className="text-xs text-gray-400 hover:text-gray-600 transition">← Ortga</button>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{activeUpload === "file" ? "📄 Fayl yuklash" : "🖼 Rasm yuklash"}</span>
+                <button onClick={() => setActiveUpload(null)} className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">← Ortga</button>
               </div>
               {activeUpload === "file" ? (
                 <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-primary-300 transition">
@@ -214,26 +214,26 @@ export default function Dashboard() {
         </div>
 
         {/* Materials list */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border animate-slide-up delay-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm border dark:border-gray-800 animate-slide-up delay-200">
           <h2 className="text-lg font-semibold mb-4">📚 Materiallar <span className="text-sm font-normal text-gray-400">({materials.length})</span></h2>
           {materials.length === 0 ? (
             <div className="text-center py-8">
               <div className="text-4xl mb-3 animate-float">📂</div>
-              <p className="text-gray-400 text-sm">Hali material yo&apos;q</p>
-              <p className="text-gray-300 text-xs mt-1">Yuqoridan material yuklang</p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm">Hali material yo&apos;q</p>
+              <p className="text-gray-300 dark:text-gray-600 text-xs mt-1">Yuqoridan material yuklang</p>
             </div>
           ) : (
             <div className="space-y-2">
               {materials.map((m) => (
                 <div key={m.id}
-                  className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${m.id === activeId ? "bg-gradient-to-r from-primary-50 to-accent-50 border-2 border-primary-200 shadow-sm" : "bg-gray-50 hover:bg-gray-100 border-2 border-transparent"}`}
+                  className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${m.id === activeId ? "bg-gradient-to-r from-primary-50 to-accent-50 border-2 border-primary-200 shadow-sm" : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-transparent"}`}
                   onClick={() => { setActiveMaterialId(m.id); setActiveId(m.id); }}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${m.id === activeId ? "bg-primary-100" : "bg-gray-100"}`}>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${m.id === activeId ? "bg-primary-100 dark:bg-primary-900" : "bg-gray-100 dark:bg-gray-700"}`}>
                     📄
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-sm truncate">{m.title}</div>
-                    <div className="text-xs text-gray-400 truncate">{m.text.slice(0, 60)}...</div>
+                    <div className="font-medium text-sm truncate dark:text-white">{m.title}</div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500 truncate">{m.text.slice(0, 60)}...</div>
                   </div>
                   {m.id === activeId && (
                     <span className="text-[10px] font-bold text-primary-600 bg-primary-100 px-2 py-0.5 rounded-full flex-shrink-0">FAOL</span>
