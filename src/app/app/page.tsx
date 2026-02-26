@@ -213,35 +213,45 @@ export default function Dashboard() {
           <input ref={imgRef} type="file" accept="image/*" onChange={handleImage} className="hidden" />
         </div>
 
-        {/* Materials list */}
+        {/* Material History */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm border dark:border-gray-800 animate-slide-up delay-200">
-          <h2 className="text-lg font-semibold mb-4">📚 Materiallar <span className="text-sm font-normal text-gray-400">({materials.length})</span></h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">📚 Tarix <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({materials.length} ta material)</span></h2>
+            {materials.length > 0 && (
+              <span className="text-xs text-gray-400 dark:text-gray-500">Tanlash uchun bosing</span>
+            )}
+          </div>
           {materials.length === 0 ? (
             <div className="text-center py-8">
               <div className="text-4xl mb-3 animate-float">📂</div>
               <p className="text-gray-400 dark:text-gray-500 text-sm">Hali material yo&apos;q</p>
-              <p className="text-gray-300 dark:text-gray-600 text-xs mt-1">Yuqoridan material yuklang</p>
+              <p className="text-gray-300 dark:text-gray-600 text-xs mt-1">Yuqoridan material yuklang — bu yerda saqlanadi</p>
             </div>
           ) : (
             <div className="space-y-2">
-              {materials.map((m) => (
-                <div key={m.id}
-                  className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${m.id === activeId ? "bg-gradient-to-r from-primary-50 to-accent-50 border-2 border-primary-200 shadow-sm" : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-transparent"}`}
-                  onClick={() => { setActiveMaterialId(m.id); setActiveId(m.id); }}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${m.id === activeId ? "bg-primary-100 dark:bg-primary-900" : "bg-gray-100 dark:bg-gray-700"}`}>
-                    📄
+              {materials.map((m) => {
+                const date = new Date(m.createdAt);
+                const timeStr = date.toLocaleDateString("uz", { day: "numeric", month: "short" }) + " · " + date.toLocaleTimeString("uz", { hour: "2-digit", minute: "2-digit" });
+                return (
+                  <div key={m.id}
+                    className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${m.id === activeId ? "bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-950 dark:to-accent-950 border-2 border-primary-200 dark:border-primary-800 shadow-sm" : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-transparent"}`}
+                    onClick={() => { setActiveMaterialId(m.id); setActiveId(m.id); }}>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${m.id === activeId ? "bg-primary-100 dark:bg-primary-900" : "bg-gray-100 dark:bg-gray-700"}`}>
+                      📄
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-sm truncate dark:text-white">{m.title}</div>
+                      <div className="text-xs text-gray-400 dark:text-gray-500 truncate">{m.text.slice(0, 60)}...</div>
+                      <div className="text-[10px] text-gray-300 dark:text-gray-600 mt-0.5">🕐 {timeStr} · {m.text.length} belgi</div>
+                    </div>
+                    {m.id === activeId && (
+                      <span className="text-[10px] font-bold text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900 px-2 py-0.5 rounded-full flex-shrink-0">FAOL</span>
+                    )}
+                    <button onClick={(e) => { e.stopPropagation(); if(confirm("Bu materialni o'chirmoqchimisiz?")) { deleteMaterial(m.id); reload(); }}}
+                      className="ml-1 text-gray-300 dark:text-gray-600 hover:text-red-500 transition text-lg flex-shrink-0">✕</button>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium text-sm truncate dark:text-white">{m.title}</div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500 truncate">{m.text.slice(0, 60)}...</div>
-                  </div>
-                  {m.id === activeId && (
-                    <span className="text-[10px] font-bold text-primary-600 bg-primary-100 px-2 py-0.5 rounded-full flex-shrink-0">FAOL</span>
-                  )}
-                  <button onClick={(e) => { e.stopPropagation(); deleteMaterial(m.id); reload(); }}
-                    className="ml-1 text-gray-300 hover:text-red-500 transition text-lg flex-shrink-0">✕</button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
