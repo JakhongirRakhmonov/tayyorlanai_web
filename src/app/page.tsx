@@ -25,9 +25,9 @@ const stats = [
 ];
 
 const testimonials = [
-  { name: "Aziza", role: "2-kurs talabasi", text: "Imtihonga 2 kunda tayyorlandim. Flashcardlar juda foydali bo'ldi!", avatar: "👩‍🎓" },
-  { name: "Sardor", role: "Biologiya fakulteti", text: "AI test yaratish funksiyasi ajoyib. Vaqtimni tejadi!", avatar: "👨‍💻" },
-  { name: "Nilufar", role: "Tibbiyot talabasi", text: "Xulosa funksiyasi bilan 50 sahifani 1 daqiqada o'rganaman!", avatar: "👩‍⚕️" },
+  { name: "Aerospace Engineer", role: "Kelajakdagi MIT talabasi", text: "To'g'risi kutganimdan ancha yaxshi, eng asosiysi tekin, ishlatishga qulay. Sodda va user friendly. Do'stlarimga albatta tavsiya qilaman!", avatar: "🚀" },
+  { name: "Bekhruz", role: "Foydalanuvchi", text: "All good, nothing more or less. Perfect!!!", avatar: "👨‍💻" },
+  { name: "Nurbek", role: "Talaba", text: "Material yuklasa, xulosa va test tuzib berishi juda zo'r. Foydali bot ekan!", avatar: "👨‍🎓" },
 ];
 
 export default function Home() {
