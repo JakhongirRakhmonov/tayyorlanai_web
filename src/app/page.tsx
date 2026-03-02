@@ -1,287 +1,406 @@
 "use client";
 import Link from "next/link";
-import ThemeToggle from "./components/ThemeToggle";
+import { useState, useEffect } from "react";
 
-const features = [
-  { icon: "📝", title: "Xulosa", desc: "Materiallaringizdan AI yordamida qisqacha xulosa oling", color: "from-blue-500 to-indigo-600" },
-  { icon: "🃏", title: "Flashcardlar", desc: "Savol-javob kartochkalari bilan o'rganing", color: "from-purple-500 to-pink-600" },
-  { icon: "📋", title: "Test", desc: "Bilimingizni AI yaratgan testlar bilan tekshiring", color: "from-green-500 to-emerald-600" },
-  { icon: "💬", title: "AI Chat", desc: "Material bo'yicha savollar bering va javob oling", color: "from-orange-500 to-red-500" },
-  { icon: "📄", title: "PDF & Rasm", desc: "PDF, matn yoki rasm yuklang — AI tahlil qiladi", color: "from-cyan-500 to-blue-600" },
-  { icon: "⚡", title: "Tezkor", desc: "Bir necha soniyada natija — Groq AI tezligi bilan", color: "from-yellow-500 to-orange-500" },
-];
+/* ─── Phone mockup showing the bot conversation ─── */
+function BotMockup() {
+  const [step, setStep] = useState(0);
+  const messages = [
+    { from: "user", text: "📸", type: "photo" },
+    { from: "bot", text: "⚡ Rasm o'qildi! Xulosa tayyorlanmoqda..." },
+    { from: "bot", text: "📚 Matematika: Limitlar\n\n📝 Xulosa: Limit — funksiyaning ma'lum nuqtaga yaqinlashgandagi qiymati...\n\n🔑 Asosiy fikrlar:\n• Limit ta'rifi va xossalari\n• Cheksizlikdagi limitlar\n• Uzluksizlik sharti" },
+    { from: "bot", text: "🃏 Flashcard 1/5\n\n❓ Limit nima?\n\n🤔 O'ylab ko'ring..." },
+    { from: "bot", text: "✅ Limit — funksiyaning argument ma'lum qiymatga yaqinlashgandagi qiymati\n\n✅ Bilardim  ❌ Bilmadim" },
+  ];
 
-const steps = [
-  { num: "01", icon: "📤", title: "Materialni yuklang", desc: "Matn, PDF yoki rasm — xohlagan formatda" },
-  { num: "02", icon: "🤖", title: "AI qayta ishlaydi", desc: "Sun'iy intellekt materialingizni tahlil qiladi" },
-  { num: "03", icon: "🎯", title: "O'rganing", desc: "Xulosa, kartochkalar, testlar va chat tayyor!" },
-];
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStep((s) => (s < messages.length - 1 ? s + 1 : 0));
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
 
-const stats = [
-  { value: "73+", label: "Foydalanuvchilar", icon: "👥" },
-  { value: "500+", label: "Materiallar", icon: "📚" },
-  { value: "3 soniya", label: "O'rtacha tezlik", icon: "⚡" },
-  { value: "100%", label: "Bepul", icon: "🎁" },
-];
+  return (
+    <div className="relative mx-auto w-[280px] md:w-[300px]">
+      {/* Phone frame */}
+      <div className="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl shadow-indigo-500/20">
+        <div className="bg-gray-950 rounded-[2rem] overflow-hidden">
+          {/* Status bar */}
+          <div className="bg-[#1a1a2e] px-5 py-2 flex items-center justify-between text-[10px] text-gray-400">
+            <span>Telegram</span>
+            <span className="font-medium text-white">TayyorlanAI</span>
+            <span>🤖</span>
+          </div>
+          {/* Chat area */}
+          <div className="bg-[#0e0e1a] px-3 py-4 h-[340px] flex flex-col gap-2 overflow-hidden">
+            {messages.slice(0, step + 1).map((m, i) => (
+              <div
+                key={i}
+                className={`max-w-[85%] rounded-2xl px-3 py-2 text-[11px] leading-relaxed animate-slide-up ${
+                  m.from === "user"
+                    ? "self-end bg-indigo-600 text-white"
+                    : "self-start bg-gray-800 text-gray-200"
+                }`}
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                {m.type === "photo" ? (
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg">📸</span>
+                    <span className="text-[10px] opacity-70">daftar_sahifa.jpg</span>
+                  </div>
+                ) : (
+                  <pre className="whitespace-pre-wrap font-sans">{m.text}</pre>
+                )}
+              </div>
+            ))}
+            {step < messages.length - 1 && (
+              <div className="self-start bg-gray-800 rounded-2xl px-3 py-2">
+                <div className="flex gap-1">
+                  <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse" />
+                  <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: "200ms" }} />
+                  <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: "400ms" }} />
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Input bar */}
+          <div className="bg-[#1a1a2e] px-3 py-2 flex items-center gap-2">
+            <div className="flex-1 bg-gray-800 rounded-full px-3 py-1.5 text-[10px] text-gray-500">Xabar yozing...</div>
+            <div className="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-[10px]">▶</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-const testimonials = [
-  { name: "Aerospace Engineer", role: "Kelajakdagi MIT talabasi", text: "To'g'risi kutganimdan ancha yaxshi, eng asosiysi tekin, ishlatishga qulay. Sodda va user friendly. Do'stlarimga albatta tavsiya qilaman!", avatar: "🚀" },
-  { name: "Bekhruz", role: "Foydalanuvchi", text: "All good, nothing more or less. Perfect!!!", avatar: "👨‍💻" },
-  { name: "Nurbek", role: "Talaba", text: "Material yuklasa, xulosa va test tuzib berishi juda zo'r. Foydali bot ekan!", avatar: "👨‍🎓" },
-];
+/* ─── Animated counter ─── */
+function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const duration = 1500;
+    const steps = 30;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [target]);
+  return <>{count}{suffix}</>;
+}
 
+/* ─── Main page ─── */
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass dark:border-gray-800 border-b border-white/20">
+    <div className="min-h-screen bg-[#0a0a12] text-white overflow-hidden">
+      
+      {/* ── Nav ── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a12]/80 backdrop-blur-xl border-b border-white/5">
         <div className="flex items-center justify-between px-5 py-3 max-w-6xl mx-auto">
-          <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-            🎓 TayyorlanAI
-          </span>
-          <div className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Imkoniyatlar</a>
-            <a href="#how" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Qanday ishlaydi</a>
-            <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Telegram Bot</a>
-          </div>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Link href="/app" className="bg-gradient-to-r from-primary-600 to-accent-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:shadow-lg hover:scale-105 transition-all">
-              Boshlash →
-            </Link>
-          </div>
+          <span className="text-lg font-bold">🎓 TayyorlanAI</span>
+          <a
+            href="https://t.me/tayyorAI_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-lg hover:shadow-indigo-500/30"
+          >
+            Boshlash →
+          </a>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative pt-28 pb-24 px-5 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.15),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,0,0.08),transparent_40%)]" />
-        <div className="relative max-w-4xl mx-auto text-center">
-          <div className="animate-slide-up inline-block px-4 py-1.5 bg-white/20 text-white rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
-            🚀 O&apos;zbek talabalari uchun #1 AI platforma
+      {/* ── Hero ── */}
+      <section className="relative pt-24 pb-12 md:pt-32 md:pb-20 px-5">
+        {/* Background glow */}
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px]" />
+        
+        <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+          {/* Left: Copy */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-4 py-1.5 text-sm text-indigo-300 mb-6">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              O'zbekistondagi yagona AI o'quv platformasi
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+              Daftaringizni
+              <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                suratga oling.
+              </span>
+              <br />
+              <span className="text-gray-400">Qolgani bizda.</span>
+            </h1>
+            
+            <p className="text-lg text-gray-400 mb-8 max-w-lg">
+              Rasm, matn yoki PDF yuboring — AI bir necha soniyada xulosa, flashcard va test yaratadi. 
+              <strong className="text-gray-300"> O'zbek tilida. Bepul.</strong>
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <a
+                href="https://t.me/tayyorAI_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-all hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Telegram'da boshlash
+              </a>
+              <Link
+                href="/app"
+                className="inline-flex items-center justify-center gap-2 border border-white/10 hover:border-white/20 text-gray-300 px-8 py-4 rounded-2xl text-lg font-semibold transition-all hover:bg-white/5"
+              >
+                Web versiya →
+              </Link>
+            </div>
           </div>
-          <h1 className="animate-slide-up delay-100 text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
-            AI bilan o&apos;qishni
-            <br />
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">osonlashtiring</span>
-          </h1>
-          <p className="animate-slide-up delay-200 text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-            Materiallaringizni yuklang — xulosa, flashcardlar, testlar va AI chat avtomatik yaratiladi. Imtihonlarga tayyorlaning!
-          </p>
-          <div className="animate-slide-up delay-300 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/app" className="inline-block bg-white text-primary-700 px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all glow-btn">
-              Bepul boshlash 🎓
-            </Link>
-            <a href="#features" className="inline-block border-2 border-white/40 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all">
-              Batafsil ↓
+          
+          {/* Right: Phone mockup */}
+          <div className="flex-shrink-0">
+            <BotMockup />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Problem ── */}
+      <section className="py-16 md:py-24 px-5">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
+            Tanish muammolarmi? 😤
+          </h2>
+          <p className="text-gray-500 text-center mb-12">Har bir o'zbek talabasi buni biladi</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              {
+                emoji: "⚡",
+                title: "Tez ma'ruzalar",
+                desc: "Ustoz tez gapiradi, daftarga yozishga ulgurmaysiz. Uyga borganda nima haqida bo'lganini eslamaysiz.",
+                color: "from-red-500/10 to-orange-500/10",
+                border: "border-red-500/20",
+              },
+              {
+                emoji: "🌍",
+                title: "Tilni tushunmaydi",
+                desc: "Turbo AI, NotebookLM — hammasi inglizcha. O'zbek tilidagi audioni tushunmaydi. Natija aralash til.",
+                color: "from-yellow-500/10 to-amber-500/10",
+                border: "border-yellow-500/20",
+              },
+              {
+                emoji: "💸",
+                title: "Qimmat ilovalar",
+                desc: "Chet el ilovalari oyiga $16. O'zbek talabasi uchun bu bir oylik ovqat puli.",
+                color: "from-purple-500/10 to-pink-500/10",
+                border: "border-purple-500/20",
+              },
+            ].map((p, i) => (
+              <div
+                key={i}
+                className={`bg-gradient-to-br ${p.color} ${p.border} border rounded-2xl p-6 hover:-translate-y-1 transition-all`}
+              >
+                <div className="text-3xl mb-3">{p.emoji}</div>
+                <h3 className="font-semibold text-lg mb-2">{p.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Solution ── */}
+      <section className="py-16 md:py-24 px-5 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-600/5 to-transparent" />
+        <div className="relative max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Yechim oddiy. Suratga oling. Tamom. 📸
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto">
+              Daftaringizni, doskani yoki kitobni suratga oling. Matn yozing. PDF yuboring. AI hammasi bilan ishlaydi.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: "📝", title: "Xulosa", desc: "Uzun materialni 30 soniyada qisqartiradi", color: "indigo" },
+              { icon: "🃏", title: "Flashcard", desc: "Eslab qolish uchun kartochkalar + o'z-o'zini baholash", color: "purple" },
+              { icon: "📋", title: "Test", desc: "Bilimingizni tekshirish uchun AI savollar yaratadi", color: "pink" },
+              { icon: "💬", title: "AI Chat", desc: "Tushunmagan narsangizni so'rang — tushuntiradi", color: "cyan" },
+            ].map((f, i) => (
+              <div
+                key={i}
+                className="group bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 hover:bg-white/[0.06] hover:border-indigo-500/30 transition-all hover:-translate-y-1"
+              >
+                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{f.icon}</div>
+                <h3 className="font-semibold mb-1">{f.title}</h3>
+                <p className="text-gray-500 text-sm">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section className="py-16 md:py-24 px-5">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+            3 qadam. Shu. ✅
+          </h2>
+          
+          <div className="space-y-6">
+            {[
+              { num: "1", title: "Material yuboring", desc: "Matn yozing, rasm yuboring yoki PDF tashlang. Qanday qulay bo'lsa.", icon: "📤" },
+              { num: "2", title: "AI ishlaydi", desc: "3 soniya. Xulosa, flashcard va test avtomatik yaratiladi.", icon: "⚡" },
+              { num: "3", title: "O'rganing", desc: "Flashcard bilan eslab qoling. Test bilan tekshiring. Chat bilan so'rang.", icon: "🎓" },
+            ].map((s, i) => (
+              <div key={i} className="flex gap-5 items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold">
+                  {s.num}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-1">
+                    {s.icon} {s.title}
+                  </h3>
+                  <p className="text-gray-400">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Social proof ── */}
+      <section className="py-16 md:py-24 px-5">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+            Talabalar aytmoqda 💬
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              {
+                text: "To'g'risi kutganimdan ancha yaxshi, eng asosiysi tekin, ishlatishga qulay. Sodda va user friendly. Do'stlarimga albatta tavsiya qilaman!",
+                name: "Aerospace Engineer",
+                role: "Kelajakdagi MIT talabasi",
+                emoji: "🚀",
+              },
+              {
+                text: "All good, nothing more or less. Perfect!!!",
+                name: "Bekhruz",
+                role: "Foydalanuvchi",
+                emoji: "👨‍💻",
+              },
+            ].map((t, i) => (
+              <div key={i} className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                <p className="text-gray-300 mb-4 italic leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-indigo-600/20 rounded-full flex items-center justify-center text-lg">{t.emoji}</div>
+                  <div>
+                    <div className="font-medium text-sm">{t.name}</div>
+                    <div className="text-xs text-gray-500">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Stats bar */}
+          <div className="mt-8 flex flex-wrap justify-center gap-8 md:gap-16">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-indigo-400"><Counter target={73} suffix="+" /></div>
+              <div className="text-sm text-gray-500">foydalanuvchi</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-400">100%</div>
+              <div className="text-sm text-gray-500">bepul</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-pink-400">🇺🇿</div>
+              <div className="text-sm text-gray-500">o'zbek tilida</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why us vs competitors ── */}
+      <section className="py-16 md:py-24 px-5">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
+            Nima uchun boshqalar emas? 🤔
+          </h2>
+          
+          <div className="overflow-hidden rounded-2xl border border-white/[0.06]">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-white/[0.03]">
+                  <th className="text-left px-4 py-3 font-medium text-gray-400"></th>
+                  <th className="px-4 py-3 font-bold text-indigo-400">TayyorlanAI</th>
+                  <th className="px-4 py-3 font-medium text-gray-500">Turbo AI</th>
+                  <th className="px-4 py-3 font-medium text-gray-500">NotebookLM</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.04]">
+                {[
+                  ["O'zbek tilida ishlaydi", "✅", "❌", "❌"],
+                  ["Narxi", "Bepul", "$16/oy", "Bepul*"],
+                  ["Flashcard + Test", "✅", "✅", "❌"],
+                  ["Rasm o'qish", "✅", "✅", "❌"],
+                  ["O'zbek talabalariga moslangan", "✅", "❌", "❌"],
+                ].map((row, i) => (
+                  <tr key={i} className="hover:bg-white/[0.02]">
+                    <td className="px-4 py-3 text-gray-400">{row[0]}</td>
+                    <td className="px-4 py-3 text-center font-medium">{row[1]}</td>
+                    <td className="px-4 py-3 text-center text-gray-500">{row[2]}</td>
+                    <td className="px-4 py-3 text-center text-gray-500">{row[3]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-600 mt-2 text-center">* NotebookLM bepul, lekin o'zbek tilini qo'llab-quvvatlamaydi</p>
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section className="py-16 md:py-24 px-5">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-transparent border border-indigo-500/20 rounded-3xl p-10 md:p-14">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Imtihonga tayyormisiz? 🎓
+            </h2>
+            <p className="text-gray-400 mb-8 text-lg">
+              Daftaringizni suratga oling. 30 soniyada xulosa, flashcard va test tayyor. Bepul.
+            </p>
+            <a
+              href="https://t.me/tayyorAI_bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-4 rounded-2xl text-lg font-semibold transition-all hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              Hoziroq boshlash
             </a>
           </div>
         </div>
-        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-yellow-400/20 rounded-full blur-3xl" />
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-pink-400/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-cyan-400/20 rounded-full blur-3xl" />
       </section>
 
-      {/* Stats */}
-      <section className="py-14 px-5 bg-white dark:bg-gray-950">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
-            <div key={i} className={`animate-stagger-${i + 1} text-center bg-gradient-to-br from-primary-50 to-accent-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-5 border border-primary-100 dark:border-gray-700 hover:shadow-lg transition-all`}>
-              <div className="text-3xl mb-2">{s.icon}</div>
-              <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-                {s.value}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features */}
-      <section id="features" className="py-16 px-5 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="animate-stagger-1 text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
-            Nima qila olasiz? 🎯
-          </h2>
-          <p className="animate-stagger-2 text-gray-500 dark:text-gray-400 text-center mb-12 max-w-xl mx-auto">
-            Bitta platforma — barcha kerakli vositalar
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {features.map((f, i) => (
-              <div key={f.title} className={`animate-stagger-${Math.min(i + 1, 6)} group bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl dark:hover:border-primary-500/50 dark:hover:shadow-primary-500/10 hover:-translate-y-1 transition-all duration-300`}>
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform`}>
-                  {f.icon}
-                </div>
-                <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">{f.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section id="how" className="py-16 px-5 bg-white dark:bg-gray-950">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="animate-stagger-1 text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
-            Qanday ishlaydi? 🛠
-          </h2>
-          <p className="animate-stagger-2 text-gray-500 dark:text-gray-400 text-center mb-12">3 oddiy qadam — va tayyor!</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((s, i) => (
-              <div key={i} className={`animate-stagger-${i + 1} text-center bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-800 rounded-2xl p-6 border border-cyan-100 dark:border-gray-700`}>
-                <div className="text-5xl mb-4 animate-float" style={{ animationDelay: `${i * 500}ms` }}>{s.icon}</div>
-                <div className="text-xs font-bold text-primary-400 mb-2">QADAM {s.num}</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">{s.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">{s.desc}</p>
-                {i < 2 && <div className="hidden md:block text-3xl text-primary-200 mt-4">→</div>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 px-5 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="animate-stagger-1 text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
-            Talabalar nima deydi? 💬
-          </h2>
-          <p className="animate-stagger-2 text-gray-500 dark:text-gray-400 text-center mb-12">Haqiqiy foydalanuvchilar fikrlari</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
-              <div key={i} className={`animate-stagger-${i + 1} bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all`}>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 italic">&ldquo;{t.text}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center text-xl">
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm text-gray-900 dark:text-white">{t.name}</div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500">{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Telegram CTA */}
-      <section className="py-16 px-5 bg-gradient-to-br from-[#0088cc]/10 via-[#0088cc]/5 to-blue-50 dark:from-[#0088cc]/20 dark:via-gray-900 dark:to-gray-950">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-[#0088cc] to-[#0066aa] rounded-3xl p-8 md:p-12 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.15),transparent_50%)]" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-            <div className="relative flex flex-col md:flex-row items-center gap-8">
-              <div className="flex-1 text-center md:text-left">
-                <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 text-sm text-white/90 mb-4">
-                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  Hozir ishlayapti
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-                  Telegram Bot 🤖
-                </h2>
-                <p className="text-white/80 text-lg mb-6 max-w-md">
-                  Telegramda ham foydalaning — material yuboring, xulosa, flashcard va testlarni chatda oling!
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-white text-[#0088cc] px-7 py-3.5 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                    Botni ochish
-                  </a>
-                  <a href="https://t.me/rahmonovvlog" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 border-2 border-white/40 text-white px-7 py-3.5 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all">
-                    📢 Kanal
-                  </a>
-                </div>
-              </div>
-              <div className="hidden md:flex flex-col gap-3 text-white/90">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                  <div className="text-sm font-medium mb-1">📝 Xulosa</div>
-                  <div className="text-xs text-white/60">Materialni yuboring → xulosa oling</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                  <div className="text-sm font-medium mb-1">🃏 Flashcardlar</div>
-                  <div className="text-xs text-white/60">Savol-javob kartochkalari</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                  <div className="text-sm font-medium mb-1">📋 Test</div>
-                  <div className="text-xs text-white/60">AI yaratgan testlar</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 px-5 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto">
-          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-10 md:p-14 overflow-hidden text-center">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.15),transparent_50%)]" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-yellow-400/20 rounded-full blur-3xl" />
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-400/20 rounded-full blur-3xl" />
-            <div className="relative">
-              <div className="text-5xl mb-4">🚀</div>
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                O&apos;qishni boshlang
-              </h2>
-              <p className="text-white/70 mb-8 text-lg max-w-lg mx-auto">
-                Materialni yuklang, AI xulosa, flashcard va test yaratsin. Bepul. Tez. O&apos;zbekcha.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/app" className="inline-block bg-white text-indigo-700 px-10 py-4 rounded-2xl text-lg font-bold hover:shadow-2xl hover:scale-105 transition-all">
-                  Platformaga kirish →
-                </Link>
-                <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all">
-                  🤖 Telegram Bot
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 via-indigo-950 to-gray-900 pt-16 pb-8 px-5 text-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-            <div className="md:col-span-2">
-              <span className="text-2xl font-bold">🎓 TayyorlanAI</span>
-              <p className="text-gray-400 mt-3 text-sm leading-relaxed max-w-sm">
-                O&apos;zbek talabalari uchun maxsus yaratilgan AI o&apos;quv platformasi. Imtihonlarga tayyorlaning, bilimingizni tekshiring va yangi narsalarni o&apos;rganing.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm uppercase tracking-wider text-gray-300 mb-4">Platforma</h4>
-              <div className="flex flex-col gap-2.5 text-sm text-gray-400">
-                <Link href="/app" className="hover:text-white transition">📤 Material yuklash</Link>
-                <Link href="/app/summary" className="hover:text-white transition">📝 Xulosa</Link>
-                <Link href="/app/flashcards" className="hover:text-white transition">🃏 Flashcardlar</Link>
-                <Link href="/app/quiz" className="hover:text-white transition">📋 Testlar</Link>
-                <Link href="/app/chat" className="hover:text-white transition">💬 AI Chat</Link>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm uppercase tracking-wider text-gray-300 mb-4">Bog&apos;lanish</h4>
-              <div className="flex flex-col gap-2.5 text-sm text-gray-400">
-                <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">🤖 Telegram Bot</a>
-                <a href="https://t.me/Developer_John" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💬 Telegram</a>
-                <a href="https://t.me/rahmonovvlog" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📢 Telegram kanal</a>
-                <a href="https://www.instagram.com/rakhmonovv.001" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📸 Instagram</a>
-                <a href="https://www.linkedin.com/in/jahongir-rahmonov-4384ab3a0" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💼 LinkedIn</a>
-                <a href="https://www.facebook.com/profile.php?id=100094652711729" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📘 Facebook</a>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-sm text-gray-500">© 2026 TayyorlanAI — O&apos;zbekiston 🇺🇿</p>
-            <p className="text-xs text-gray-600">O&apos;zbek talabalari uchun yaratilgan</p>
+      {/* ── Footer ── */}
+      <footer className="border-t border-white/5 py-8 px-5">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-sm text-gray-600">© 2026 TayyorlanAI 🇺🇿</span>
+          <div className="flex items-center gap-5 text-sm text-gray-500">
+            <a href="https://t.me/tayyorAI_bot" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">🤖 Bot</a>
+            <a href="https://t.me/rahmonovvlog" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📢 Kanal</a>
+            <a href="https://t.me/Developer_John" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💬 Bog'lanish</a>
+            <a href="https://www.instagram.com/rakhmonovv.001" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📸 Instagram</a>
           </div>
         </div>
       </footer>
