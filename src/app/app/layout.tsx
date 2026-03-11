@@ -11,6 +11,7 @@ const nav = [
   { href: "/app/flashcards", label: "🃏", title: "Kartalar" },
   { href: "/app/quiz", label: "📋", title: "Test" },
   { href: "/app/chat", label: "💬", title: "Chat" },
+  { href: "/app/youtube", label: "▶️", title: "YouTube" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

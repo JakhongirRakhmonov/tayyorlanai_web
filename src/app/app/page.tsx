@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getMaterials, saveMaterial, deleteMaterial, getActiveMaterialId, setActiveMaterialId, Material } from "@/lib/store";
 
 const tools = [
@@ -14,13 +15,14 @@ const uploadTypes = [
   { key: "text" as const, icon: "📝", title: "Matn yozing", desc: "Materialingizni yozing yoki joylashtiring", color: "from-blue-500 to-indigo-600" },
   { key: "file" as const, icon: "📄", title: "Fayl yuklang", desc: "PDF yoki TXT faylni tanlang", color: "from-purple-500 to-pink-600" },
   { key: "image" as const, icon: "🖼", title: "Rasm yuklang", desc: "Rasm — AI matnni tanib oladi (OCR)", color: "from-teal-500 to-cyan-600" },
+  { key: "youtube" as const, icon: "▶️", title: "YouTube video", desc: "Video subtitridan xulosa yaratish", color: "from-red-500 to-rose-600" },
 ];
 
 export default function Dashboard() {
   const router = useRouter();
   const [materials, setMats] = useState<Material[]>([]);
   const [activeId, setActiveId] = useState("");
-  const [activeUpload, setActiveUpload] = useState<"text" | "file" | "image" | null>(null);
+  const [activeUpload, setActiveUpload] = useState<"text" | "file" | "image" | "youtube" | null>(null);
   const [textInput, setTextInput] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
@@ -153,18 +155,26 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-400 dark:text-gray-500">Matn, fayl yoki rasm — quyidagilardan birini tanlang</p>
               </div>
 
-              {/* 3 action buttons */}
-              <div className="grid grid-cols-3 gap-3">
+              {/* Upload type buttons */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {uploadTypes.map((u) => (
-                  <button key={u.key} onClick={() => {
-                    setActiveUpload(u.key);
-                    if (u.key === "file") setTimeout(() => fileRef.current?.click(), 100);
-                    if (u.key === "image") setTimeout(() => imgRef.current?.click(), 100);
-                  }}
-                    className="group flex flex-col items-center gap-2 py-4 px-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                    <span className="text-2xl group-hover:scale-110 transition-transform duration-200">{u.icon}</span>
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">{u.key === "text" ? "Matn" : u.key === "file" ? "Fayl" : "Rasm"}</span>
-                  </button>
+                  u.key === "youtube" ? (
+                    <Link key={u.key} href="/app/youtube"
+                      className="group flex flex-col items-center gap-2 py-4 px-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                      <span className="text-2xl group-hover:scale-110 transition-transform duration-200">{u.icon}</span>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">YouTube</span>
+                    </Link>
+                  ) : (
+                    <button key={u.key} onClick={() => {
+                      setActiveUpload(u.key);
+                      if (u.key === "file") setTimeout(() => fileRef.current?.click(), 100);
+                      if (u.key === "image") setTimeout(() => imgRef.current?.click(), 100);
+                    }}
+                      className="group flex flex-col items-center gap-2 py-4 px-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                      <span className="text-2xl group-hover:scale-110 transition-transform duration-200">{u.icon}</span>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">{u.key === "text" ? "Matn" : u.key === "file" ? "Fayl" : "Rasm"}</span>
+                    </button>
+                  )
                 ))}
               </div>
             </div>
