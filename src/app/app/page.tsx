@@ -27,10 +27,16 @@ export default function Dashboard() {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { reload(); }, []);
+  useEffect(() => {
+    reload();
+    // Show YouTube announcement banner if not dismissed
+    const dismissed = localStorage.getItem("yt-banner-dismissed");
+    if (!dismissed) setShowBanner(true);
+  }, []);
 
   function reload() {
     setMats(getMaterials());
@@ -117,6 +123,31 @@ export default function Dashboard() {
       )}
 
       <div className="space-y-5">
+        {/* YouTube feature announcement */}
+        {showBanner && (
+          <div className="relative bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 rounded-2xl p-4 md:p-5 shadow-lg animate-slide-up overflow-hidden">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9zdmc+')] opacity-50" />
+            <button
+              onClick={() => { setShowBanner(false); localStorage.setItem("yt-banner-dismissed", "1"); }}
+              className="absolute top-3 right-3 text-white/70 hover:text-white transition text-lg z-10"
+            >✕</button>
+            <div className="relative flex items-center gap-4">
+              <div className="text-4xl md:text-5xl flex-shrink-0 animate-bounce">🎬</div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-white font-bold text-base md:text-lg">Yangi! YouTube video xulosa</h3>
+                  <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">NEW</span>
+                </div>
+                <p className="text-white/80 text-xs md:text-sm mb-3">YouTube havolasini joylashtiring — AI video mazmunini o&apos;zbek tilida xulosa qiladi ⚡</p>
+                <Link href="/app/youtube"
+                  className="inline-flex items-center gap-2 bg-white text-red-600 font-bold text-sm px-5 py-2 rounded-xl hover:bg-white/90 hover:shadow-lg hover:scale-105 transition-all duration-200">
+                  ▶️ Sinab ko&apos;rish
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick tools (when material is active) */}
         {activeMaterial && (
           <div className="animate-slide-up">
@@ -160,9 +191,10 @@ export default function Dashboard() {
                 {uploadTypes.map((u) => (
                   u.key === "youtube" ? (
                     <Link key={u.key} href="/app/youtube"
-                      className="group flex flex-col items-center gap-2 py-4 px-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                      className="group relative flex flex-col items-center gap-2 py-4 px-3 rounded-xl border-2 border-red-200 dark:border-red-800/50 bg-red-50 dark:bg-red-950/30 hover:bg-white dark:hover:bg-gray-800 hover:border-red-300 dark:hover:border-red-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                      <span className="absolute -top-2 -right-2 text-[9px] font-bold bg-red-500 text-white px-1.5 py-0.5 rounded-full animate-pulse">YANGI</span>
                       <span className="text-2xl group-hover:scale-110 transition-transform duration-200">{u.icon}</span>
-                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">YouTube</span>
+                      <span className="text-sm font-semibold text-red-600 dark:text-red-400">YouTube</span>
                     </Link>
                   ) : (
                     <button key={u.key} onClick={() => {

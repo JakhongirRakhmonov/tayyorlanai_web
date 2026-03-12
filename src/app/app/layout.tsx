@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { getActiveMaterial } from "@/lib/store";
 import ThemeToggle from "../components/ThemeToggle";
 
-const nav = [
+const nav: { href: string; label: string; title: string; exact?: boolean; isNew?: boolean }[] = [
   { href: "/app", label: "📂", title: "Material", exact: true },
   { href: "/app/summary", label: "📝", title: "Xulosa" },
   { href: "/app/flashcards", label: "🃏", title: "Kartalar" },
   { href: "/app/quiz", label: "📋", title: "Test" },
   { href: "/app/chat", label: "💬", title: "Chat" },
-  { href: "/app/youtube", label: "▶️", title: "YouTube" },
+  { href: "/app/youtube", label: "▶️", title: "YouTube", isNew: true },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -52,8 +52,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             const active = n.exact ? path === n.href : path.startsWith(n.href);
             return (
               <Link key={n.href} href={n.href}
-                className={`px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition font-medium ${active ? "bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"}`}>
+                className={`relative px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition font-medium ${active ? "bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"}`}>
                 {n.label} {n.title}
+                {n.isNew && (
+                  <span className="absolute -top-1.5 -right-1 text-[9px] font-bold bg-red-500 text-white px-1.5 py-0.5 rounded-full animate-pulse">
+                    YANGI
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -78,9 +83,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             const active = n.exact ? path === n.href : path.startsWith(n.href);
             return (
               <Link key={n.href} href={n.href}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition ${active ? "text-primary-600" : "text-gray-400"}`}>
+                className={`relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition ${active ? "text-primary-600" : "text-gray-400"}`}>
                 <span className={`text-xl ${active ? "scale-110" : ""} transition-transform`}>{n.label}</span>
                 <span className="text-[10px] font-medium">{n.title}</span>
+                {n.isNew && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
+                )}
               </Link>
             );
           })}
