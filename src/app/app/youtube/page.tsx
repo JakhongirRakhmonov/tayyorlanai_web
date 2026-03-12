@@ -119,7 +119,7 @@ export default function YouTubePage() {
             <div>
               <p className="text-red-700 dark:text-red-400 font-medium text-sm">{error}</p>
               <p className="text-red-500/70 dark:text-red-500/50 text-xs mt-1">
-                Video subtitrli bo&apos;lishi kerak. Boshqa video sinab ko&apos;ring.
+                Boshqa video sinab ko&apos;ring yoki havolani tekshiring.
               </p>
             </div>
           </div>
