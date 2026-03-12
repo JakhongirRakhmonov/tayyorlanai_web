@@ -32,26 +32,45 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fetch transcript
-    let transcriptItems;
+    // Fetch transcript — try youtube-transcript first, then Supadata AI fallback
+    let fullText = "";
+
+    // Method 1: youtube-transcript library
     try {
-      transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
+      const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
+      if (transcriptItems && transcriptItems.length > 0) {
+        fullText = transcriptItems.map((item) => item.text).join(" ");
+      }
     } catch {
+      // Will try Supadata fallback below
+    }
+
+    // Method 2: Supadata AI fallback
+    if (!fullText) {
+      const supadataKey = process.env.SUPADATA_API_KEY;
+      if (supadataKey) {
+        try {
+          const res = await fetch(
+            `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}&text=true`,
+            { headers: { "x-api-key": supadataKey } }
+          );
+          if (res.ok) {
+            const data = await res.json();
+            // When text=true, response has a "content" field with plain text
+            fullText = data.content || "";
+          }
+        } catch {
+          // Supadata also failed
+        }
+      }
+    }
+
+    if (!fullText) {
       return NextResponse.json(
-        { error: "Bu videoda avtomatik matn topilmadi. Faqat subtitrli videolar ishlaydi." },
+        { error: "Video yuklab bo'lmadi, boshqa video sinab ko'ring" },
         { status: 404 }
       );
     }
-
-    if (!transcriptItems || transcriptItems.length === 0) {
-      return NextResponse.json(
-        { error: "Bu videoda avtomatik matn topilmadi. Faqat subtitrli videolar ishlaydi." },
-        { status: 404 }
-      );
-    }
-
-    // Combine transcript text
-    const fullText = transcriptItems.map((item) => item.text).join(" ");
     const trimmed = fullText.slice(0, 10000);
 
     if (trimmed.length < 10) {
