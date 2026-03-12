@@ -98,8 +98,8 @@ function HeroProduct() {
           
           {/* Input type indicators */}
           <div className="flex gap-2 mt-2">
-            {["📝 Matn", "📄 PDF", "📸 Rasm"].map((label, i) => (
-              <span key={i} className={`text-[10px] px-2 py-0.5 rounded-md ${i === 0 ? "bg-indigo-500/20 text-indigo-300" : "bg-white/[0.04] text-gray-600"}`}>
+            {["📝 Matn", "📄 PDF", "📸 Rasm", "▶️ YouTube"].map((label, i) => (
+              <span key={i} className={`text-[10px] px-2 py-0.5 rounded-md ${i === 0 ? "bg-indigo-500/20 text-indigo-300" : i === 3 ? "bg-red-500/20 text-red-300" : "bg-white/[0.04] text-gray-600"}`}>
                 {label}
               </span>
             ))}
@@ -356,7 +356,7 @@ export default function Home() {
             </h1>
 
             <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Matn yozing, fayl tashlang yoki rasm yuboring — AI xulosa, flashcard va test yaratadi.
+              Matn yozing, fayl tashlang, rasm yuboring yoki <span className="text-red-400 font-medium">YouTube havolasini joylashtiring</span> — AI xulosa, flashcard va test yaratadi.
               <span className="text-gray-300"> O'zbek tilida. Bepul.</span>
             </p>
 
@@ -388,6 +388,23 @@ export default function Home() {
             <h2 className="text-2xl md:text-4xl font-bold mb-3 tracking-tight">Material yuboring — AI qolganini qiladi</h2>
             <p className="text-gray-500 max-w-lg mx-auto">Matn, rasm yoki fayl. Qaysi formatda bo'lsa ham ishlaydi.</p>
           </div>
+          {/* YouTube feature highlight */}
+          <div className="relative bg-gradient-to-r from-red-500/10 via-rose-500/10 to-pink-500/10 border border-red-500/20 rounded-2xl p-6 md:p-8 mb-6 group hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+            <div className="absolute top-4 right-4">
+              <span className="text-[10px] font-bold bg-red-500 text-white px-2.5 py-1 rounded-full animate-pulse">YANGI</span>
+            </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+              <div className="text-5xl group-hover:scale-110 transition-transform">🎬</div>
+              <div className="flex-1">
+                <h3 className="font-bold text-xl mb-2">YouTube Video Xulosa</h3>
+                <p className="text-gray-400 leading-relaxed">YouTube havolasini joylashtiring — AI video mazmunini o&apos;zbek tilida xulosa qiladi. Keyin flashcard va test ham yarating!</p>
+              </div>
+              <Link href="/app/youtube" className="flex-shrink-0 bg-red-500 hover:bg-red-400 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:shadow-lg hover:shadow-red-500/25">
+                Sinab ko&apos;rish →
+              </Link>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               { icon: "📝", title: "Xulosa", desc: "Uzun materialni bir necha soniyada qisqartiradi. Asosiy fikrlarni alohida ajratib beradi.", gradient: "from-blue-500/10 to-indigo-500/10", border: "border-blue-500/15" },
@@ -423,7 +440,7 @@ export default function Home() {
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-14 tracking-tight">Qanday ishlaydi?</h2>
           <div className="space-y-8">
             {[
-              { num: "1", title: "Material yuboring", desc: "Matn yozing, rasm yuboring yoki PDF tashlang. Daftar surati ham ishlaydi — AI matnni o'qiy oladi." },
+              { num: "1", title: "Material yuboring", desc: "Matn yozing, rasm yuboring, PDF tashlang yoki YouTube havolasini joylashtiring. Daftar surati ham ishlaydi — AI hammasini o'qiy oladi." },
               { num: "2", title: "AI qayta ishlaydi", desc: "Bir necha soniyada xulosa avtomatik tayyor. Keyin flashcard, test yoki chat tanlaysiz." },
               { num: "3", title: "O'rganing va tekshiring", desc: "Flashcard bilan eslab qoling, test bilan tekshiring, chat orqali savollaringizga javob oling." },
             ].map((s, i) => (
