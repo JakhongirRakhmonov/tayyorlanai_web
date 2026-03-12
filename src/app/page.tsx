@@ -315,11 +315,54 @@ function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
    Page
    ═══════════════════════════════════════════════════ */
 export default function Home() {
+  const [showPopup, setShowPopup] = useState(false);
+  const [dismissedBar, setDismissedBar] = useState(false);
+
+  useEffect(() => {
+    // Show floating popup after 3 seconds
+    const t = setTimeout(() => setShowPopup(true), 3000);
+    // Auto-hide after 12 seconds
+    const t2 = setTimeout(() => setShowPopup(false), 15000);
+    return () => { clearTimeout(t); clearTimeout(t2); };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#08080f] text-white overflow-hidden">
 
+      {/* ── Announcement Bar ── */}
+      {!dismissedBar && (
+        <div className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-red-600 via-rose-500 to-pink-600 text-white text-center py-2 px-4">
+          <div className="flex items-center justify-center gap-2 text-sm font-medium">
+            <span className="animate-bounce">🎬</span>
+            <span>YANGI: YouTube videolardan xulosa yarating!</span>
+            <Link href="/app/youtube" className="underline font-bold hover:text-white/90 ml-1">Sinab ko&apos;ring →</Link>
+            <button onClick={() => setDismissedBar(true)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-lg">✕</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Floating Popup Notification ── */}
+      {showPopup && (
+        <div className="fixed bottom-6 right-6 z-[60] animate-slide-up max-w-sm">
+          <div className="bg-[#12121f] border border-white/10 rounded-2xl p-5 shadow-2xl shadow-red-500/10 relative">
+            <button onClick={() => setShowPopup(false)} className="absolute top-3 right-3 text-gray-500 hover:text-white transition text-sm">✕</button>
+            <div className="flex items-start gap-3">
+              <div className="text-3xl animate-pulse">🎬</div>
+              <div>
+                <p className="font-bold text-sm mb-1">YouTube Xulosa — Yangi!</p>
+                <p className="text-gray-400 text-xs leading-relaxed mb-3">Endi YouTube havolasini joylashtiring — AI video mazmunini xulosa qiladi</p>
+                <Link href="/app/youtube" onClick={() => setShowPopup(false)}
+                  className="inline-flex items-center gap-1.5 bg-red-500 hover:bg-red-400 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all">
+                  ▶️ Sinab ko&apos;rish
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#08080f]/80 backdrop-blur-xl border-b border-white/5">
+      <nav className={`fixed ${dismissedBar ? 'top-0' : 'top-[36px]'} left-0 right-0 z-50 bg-[#08080f]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300`}>
         <div className="flex items-center justify-between px-5 py-3 max-w-6xl mx-auto">
           <Link href="/" className="text-lg font-bold tracking-tight">🎓 TayyorlanAI</Link>
           <div className="flex items-center gap-3">
@@ -333,7 +376,7 @@ export default function Home() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="relative pt-28 pb-8 md:pt-36 md:pb-16 px-5">
+      <section className={`relative ${dismissedBar ? 'pt-28 md:pt-36' : 'pt-36 md:pt-44'} pb-8 md:pb-16 px-5 transition-all duration-300`}>
         {/* Background glows */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-indigo-600/15 rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute top-40 right-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
