@@ -550,6 +550,7 @@ export default function Home() {
             <a href="https://t.me/rahmonovvlog" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📢 Kanal</a>
             <a href="https://t.me/Developer_John" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">💬 Bog'lanish</a>
             <a href="https://www.instagram.com/rakhmonovv.001" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">📸 Instagram</a>
+            <a href="https://linktr.ee/Jahongir_Rahmonov" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 font-semibold transition-all">Follow for more ↗</a>
           </div>
         </div>
       </footer>
